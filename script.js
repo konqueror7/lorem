@@ -74,6 +74,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             this.outputMsg.style.removeProperty('color')
                         }
                     })
+                }).catch(error=>{
+                    console.error('Отклонено с сообщением', error)
                 })
                 this.sumbitForm.reset()
             })
