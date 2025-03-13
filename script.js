@@ -73,9 +73,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         } else {
                             this.outputMsg.style.removeProperty('color')
                         }
+                    }).catch(error=>{
+                        console.error('Отклонено с сообщением', error)
+                        this.outputMsg.innerHTML = 'Проверьте настройки почтового сервиса'
+                        this.outputMsg.style.marginBottom = '10px'
+                        this.outputMsg.style.color = '#FF0000'
                     })
-                }).catch(error=>{
-                    console.error('Отклонено с сообщением', error)
                 })
                 this.sumbitForm.reset()
             })
@@ -86,6 +89,45 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     submitForm.init()
+
+    class checkValidateFildsForm {
+        constructor() {
+            this.registerDomObjects()
+            this.registerEvents()
+        }
+        registerDomObjects () {
+            this.formfields = {
+                name: document.querySelector('#submit-form #name'),
+                email: document.querySelector('#submit-form #email'),
+                accept: document.querySelector('#submit-form #accept')
+            }
+
+        }
+        registerEvents () {
+            console.log(this.formfields)
+
+            for (let item in this.formfields) {
+                this.formfields[item].addEventListener('blur', (e)=>{
+                    this.formfields[item].reportValidity();
+                    if (this.formfields[item].validity.valid) {
+                        this.outputLog('');
+                    } else if (this.formfields[item].validity.valueMissing) {
+                        this.outputLog(`field ${item} cannot be empty.`);
+                    } else {
+                        this.outputLog("Bad input detected: " + this.formfields[item].validationMessage);
+                    }
+                })
+            }
+        }
+        outputLog (text) {
+            this.outputMsg = document.querySelector('#submit-form #output-mess')
+            this.outputMsg.innerHTML = text
+            this.outputMsg.style.marginBottom = '10px'
+            this.outputMsg.style.color = '#FF0000'
+        }
+    }
+
+    let orderForm = new checkValidateFildsForm()
 
     class burgerMenu {
         static init() {
